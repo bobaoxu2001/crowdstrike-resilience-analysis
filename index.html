@@ -3,211 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrowdStrike Resilience Analysis & Application</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f7f9fc;
-            color: #333;
-            line-height: 1.6;
-        }
-        header {
-            background-color: #0b3c5d;
-            color: #fff;
-            padding: 40px 20px;
-            text-align: center;
-        }
-        h1 {
-            margin: 0;
-            font-size: 2em;
-        }
-        nav {
-            display: flex;
-            justify-content: center;
-            background-color: #f0f4f8;
-            padding: 10px;
-        }
-        nav a {
-            margin: 0 15px;
-            text-decoration: none;
-            color: #0b3c5d;
-            font-weight: bold;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        section {
-            padding: 20px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        h2 {
-            color: #0b3c5d;
-            margin-top: 40px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #e9f1f7;
-        }
-        footer {
-            background-color: #0b3c5d;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-        .hero {
-            background-color: #e9f1f7;
-            padding: 30px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-    </style>
+    <title>CrowdStrike Resilience Analysis &amp; Application</title>
+    <meta name="description" content="An independent business-resilience case study on the July 2024 CrowdStrike Falcon outage: business impact analysis, root cause, risk assessment, corrective actions, and ERM recommendations.">
+    <meta name="author" content="Business Resilience Analyst">
+    <meta name="theme-color" content="#0b3c5d">
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CrowdStrike Resilience Analysis &amp; Application">
+    <meta property="og:description" content="A concise case study on the July 2024 CrowdStrike outage, lessons learned and resilience improvements.">
+
+    <!-- Inline SVG favicon (shield) keeps the site self-contained -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230b3c5d' d='M12 1 3 5v6c0 5 3.8 9.7 9 11 5.2-1.3 9-6 9-11V5l-9-4z'/%3E%3Cpath fill='%2300a3e0' d='M12 3.2 5 6.3V11c0 4 2.9 7.8 7 9 4.1-1.2 7-5 7-9V6.3l-7-3.1z'/%3E%3C/svg%3E">
+
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>CrowdStrike Resilience Analysis & Application</h1>
-        <p>A concise case study on the July 2024 outage, lessons learned and resilience improvements</p>
-    </header>
-    <nav>
-        <a href="#intro">Background</a>
-        <a href="#bia">BIA</a>
-        <a href="#rootcause">Root Cause</a>
-        <a href="#risk">Risk Assessment</a>
-        <a href="#cap">Action Plan</a>
-        <a href="#erm">ERM</a>
-        <a href="#analysis">Analysis</a>
-        <a href="#why">Why CrowdStrike & Me</a>
-    </nav>
-    <section id="intro">
-        <h2>Background</h2>
-        <p>In July&nbsp;2024, CrowdStrike released an incorrect Falcon content update targeting <strong>"malicious named pipes"</strong> rules. The update interacted unexpectedly with Windows, causing kernel crashes and triggering widespread <abbr title="Blue Screen of Death">BSOD</abbr> events across multiple regions. As many as <strong>8.5&nbsp;million</strong> devices were impacted across aviation, healthcare, banking, government, and retail sectors, and the direct economic impact has been estimated at over <strong>$10&nbsp;billion</strong>. Airline check‑in systems halted, hospital patient records were inaccessible, and financial institutions delayed clearing transactions. Such disruption illustrates how a single point of failure in a security platform can cascade into critical infrastructure.</p>
-        <div class="hero">
-            <p><strong>Key numbers:</strong> 8.5M devices affected • $10B estimated losses • 10,000+ flights delayed • 80+ hospitals affected</p>
+    <a class="skip-link" href="#intro">Skip to main content</a>
+
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="brand" href="#top" aria-label="CrowdStrike Resilience Analysis home">
+                <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d="M12 1 3 5v6c0 5 3.8 9.7 9 11 5.2-1.3 9-6 9-11V5l-9-4z" opacity=".35"/>
+                    <path fill="currentColor" d="M12 3.2 5 6.3V11c0 4 2.9 7.8 7 9 4.1-1.2 7-5 7-9V6.3l-7-3.1z"/>
+                </svg>
+                <span class="brand__text">Resilience Analysis</span>
+            </a>
+
+            <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primaryNav" aria-label="Toggle navigation menu">
+                <span class="nav-toggle__bar"></span>
+                <span class="nav-toggle__bar"></span>
+                <span class="nav-toggle__bar"></span>
+            </button>
+
+            <nav class="primary-nav" id="primaryNav" aria-label="Primary">
+                <a href="#intro">Background</a>
+                <a href="#bia">BIA</a>
+                <a href="#rootcause">Root Cause</a>
+                <a href="#risk">Risk</a>
+                <a href="#cap">Action Plan</a>
+                <a href="#erm">ERM</a>
+                <a href="#analysis">Analysis</a>
+                <a href="#why">Why Me</a>
+            </nav>
         </div>
-    </section>
-    <section id="bia">
-        <h2>Business Impact Analysis (BIA)</h2>
-        <p>The BIA evaluates both direct and indirect consequences of the outage on business operations. Direct costs included revenue loss due to service outages and emergency remediation. Indirect impacts included reputational damage, customer churn, and potential legal liabilities. Quantifying these impacts helps prioritise remediation efforts and allocate resources efficiently.</p>
-        <ul>
-            <li><strong>Direct financial losses:</strong> downtime for airlines, hospitals, banks and retailers, translating to delayed flights, cancelled appointments and missed transactions.</li>
-            <li><strong>Operational disruption:</strong> IT teams diverted from strategic projects to crisis mitigation; executives required to handle crisis communications and regulatory reporting.</li>
-            <li><strong>Intangible costs:</strong> erosion of customer trust and employee morale; risk of lawsuits and regulatory penalties; potential long‑term brand damage.</li>
-        </ul>
-    </section>
-    <section id="rootcause">
-        <h2>Root Cause &amp; Bow‑Tie Analysis</h2>
-        <p>The incident stemmed from a chain of technical and organisational failures. We performed a bow‑tie analysis to map the progression from causes to consequences and identify control gaps.</p>
-        <h3>Contributing factors</h3>
-        <ul>
-            <li><strong>Insufficient testing:</strong> the content update targeted sensitive Windows kernel components, yet lacked rigorous regression and integration testing across diverse operating system builds.</li>
-            <li><strong>Automated global deployment:</strong> the update was pushed simultaneously to millions of endpoints without phased rollout or fail‑safes to halt distribution upon detecting anomalies.</li>
-            <li><strong>Inadequate input validation:</strong> the update code did not adequately validate pipe names, leading to kernel memory corruption.</li>
-            <li><strong>Poor change governance:</strong> limited peer review and risk assessment allowed a high‑impact update to bypass escalation procedures.</li>
-        </ul>
-        <h3>Consequences</h3>
-        <ul>
-            <li>Widespread BSODs causing system downtime.</li>
-            <li>Disrupted critical services (e.g. flight scheduling, medical record access, payment processing).</li>
-            <li>Significant financial and reputational damage.</li>
-        </ul>
-        <p>Bow‑tie analysis reinforces that technical defects can propagate to severe business disruption when change management controls are weak. Mitigation barriers must be strengthened across both technology and process dimensions.</p>
-    </section>
-    <section id="risk">
-        <h2>Risk Assessment &amp; Heatmap</h2>
-        <p>We evaluated key risks based on <strong>impact (1–5)</strong> and <strong>likelihood (1–5)</strong> to generate a heatmap. Major risks were grouped into <em>technical</em> and <em>people/process</em> categories.</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Risk Category</th>
-                    <th>Description</th>
-                    <th>Impact</th>
-                    <th>Likelihood</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Kernel modification</td>
-                    <td>Changes to low‑level OS components can have cascading effects if not properly isolated.</td>
-                    <td>5</td>
-                    <td>3</td>
-                </tr>
-                <tr>
-                    <td>Insufficient regression testing</td>
-                    <td>Lack of broad test coverage across OS versions and configurations.</td>
-                    <td>4</td>
-                    <td>4</td>
-                </tr>
-                <tr>
-                    <td>Overly aggressive rollout</td>
-                    <td>Automated push to all endpoints without canary deployments or kill switch.</td>
-                    <td>4</td>
-                    <td>3</td>
-                </tr>
-                <tr>
-                    <td>Communication & training gaps</td>
-                    <td>IT staff overloaded; incident response playbooks outdated; lacking awareness of update risks.</td>
-                    <td>3</td>
-                    <td>4</td>
-                </tr>
-                <tr>
-                    <td>Risk governance weaknesses</td>
-                    <td>Inadequate risk registers and absence of enterprise‑level oversight for content updates.</td>
-                    <td>4</td>
-                    <td>3</td>
-                </tr>
-            </tbody>
-        </table>
-        <p>High‑impact and high‑likelihood risks require immediate attention. Risk scoring helps allocate resources towards mitigating the most critical vulnerabilities.</p>
-    </section>
-    <section id="cap">
-        <h2>Corrective Action Plan (CAP)</h2>
-        <p>We propose a multi‑phased corrective plan to prevent recurrence and build resilience.</p>
-        <ul>
-            <li><strong>Layered testing and code review:</strong> enforce peer reviews and mandatory integration tests covering different Windows versions and third‑party applications.</li>
-            <li><strong>Phased rollout &amp; auto‑rollback:</strong> deploy updates to a small subset of endpoints (canaries) and monitor for anomalies before broad release; implement automatic rollback if failure thresholds are met.</li>
-            <li><strong>Enhanced error detection and telemetry:</strong> embed health checks in the update; collect real‑time telemetry to detect unusual reboot patterns or memory errors.</li>
-            <li><strong>Staff training &amp; communication:</strong> update incident response playbooks, provide crisis management training, and communicate clearly with customers and partners during incidents.</li>
-            <li><strong>Continuous improvement &amp; audit:</strong> perform regular audits of update procedures, maintain a post‑incident knowledge base, and integrate lessons learned into change management workflows.</li>
-        </ul>
-    </section>
-    <section id="erm">
-        <h2>Enterprise Risk Management (ERM) Enhancements</h2>
-        <p>To institutionalise resilience, we recommend strengthening corporate risk governance:</p>
-        <ul>
-            <li><strong>Governance structure:</strong> assign clear roles and responsibilities for the Board, Risk Committee, <abbr title="Chief Information Security Officer">CISO</abbr>, and product teams. Establish a Resilience Council to oversee BIA, crisis planning and business continuity.</li>
-            <li><strong>Framework alignment:</strong> adopt standards such as ISO&nbsp;22301 (Business Continuity Management), ISO&nbsp;27001 (Information Security) and <abbr title="National Institute of Standards and Technology">NIST</abbr> SP&nbsp;800‑34 for disaster recovery.</li>
-            <li><strong>Risk register &amp; appetite:</strong> maintain a centralised register of technology and operational risks, with clearly defined risk appetite and tolerance thresholds for critical updates.</li>
-            <li><strong>Key Risk Indicators (KRIs):</strong> track metrics such as update failure rate, untested modules, incident detection time, coverage of regression tests, and number of actionable anomalies detected during canary phases.</li>
-            <li><strong>Cross‑functional drills:</strong> run regular tabletop exercises simulating large‑scale outages; involve engineering, operations, support and executive teams to improve coordination.</li>
-        </ul>
-    </section>
-    <section id="analysis">
-        <h2>Analysis &amp; Lessons Learned</h2>
-        <p>The outage illustrates how highly automated security platforms can turn into systemic risks when safeguards are lacking. Technical issues in the update pipeline (e.g. input validation) are intimately connected to organisational factors such as workload pressures, inadequate change management and fragmented oversight.</p>
-        <p>By mapping causal pathways, we see that a single defect escalated rapidly because there were no intermediate barriers (e.g. canary testing, peer review, kill switch). The event underscores that <em>resilience is not solely a technical feature</em> but a holistic discipline requiring process maturity, leadership commitment and a culture of transparency.</p>
-        <p>CrowdStrike’s swift remediation and subsequent transparency demonstrate an opportunity to emerge stronger. Implementing the corrective actions and ERM enhancements will not only prevent similar disruptions but also strengthen customer confidence. Aligning resilience practices with recognised standards such as ISO 22301 fosters external assurance and continuous improvement.</p>
-    </section>
-    <section id="why">
-        <h2>Why CrowdStrike &amp; Why Me</h2>
-        <p><strong>Why CrowdStrike:</strong> As a pioneer in cloud‑native cybersecurity, CrowdStrike’s mission to stop breaches resonates with my passion for protecting critical systems. The July 2024 incident provides a real‑world opportunity to drive meaningful improvements in resilience and governance. I admire CrowdStrike’s culture of learning and transparency, and I am excited by the chance to contribute to its ongoing transformation.</p>
-        <p><strong>Why I’m a fit:</strong> I bring hands‑on experience in business continuity and risk management, including performing BIAs, developing crisis plans, and facilitating tabletop exercises. My background in IT audit and data analytics enables me to identify control gaps and design evidence‑based remediation. I am adept at communicating complex technical issues to diverse audiences and at building collaborative relationships across engineering, operations and leadership teams. This aligns perfectly with the Business Resilience Analyst role’s requirements to support BCP development, risk assessments, and cross‑functional training.</p>
-        <p>Joining CrowdStrike would allow me to leverage my skills in a mission‑driven environment while continuing to grow professionally through the company’s remote‑friendly culture and professional development programs.</p>
-    </section>
-    <footer>
-        <p>Prepared by [Your Name] – 2025. This project is an independent analysis inspired by the CrowdStrike July 2024 outage and is not officially affiliated with CrowdStrike.</p>
+        <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    </header>
+
+    <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero__inner">
+                <p class="hero__eyebrow">Business Resilience Case Study</p>
+                <h1 id="hero-title">CrowdStrike Resilience Analysis &amp; Application</h1>
+                <p class="hero__lede">A concise case study on the July&nbsp;2024 Falcon outage &mdash; the business impact, root causes, lessons learned, and the resilience improvements that follow.</p>
+                <div class="hero__actions">
+                    <a class="btn btn--primary" href="#intro">Read the analysis</a>
+                    <a class="btn btn--ghost" href="#risk">View risk heatmap</a>
+                </div>
+                <dl class="stat-grid" aria-label="Key impact figures">
+                    <div class="stat-card">
+                        <dt>Devices affected</dt>
+                        <dd>8.5M</dd>
+                    </div>
+                    <div class="stat-card">
+                        <dt>Estimated losses</dt>
+                        <dd>$10B+</dd>
+                    </div>
+                    <div class="stat-card">
+                        <dt>Flights delayed</dt>
+                        <dd>10,000+</dd>
+                    </div>
+                    <div class="stat-card">
+                        <dt>Hospitals affected</dt>
+                        <dd>80+</dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+
+        <section id="intro" class="reveal" aria-labelledby="intro-title">
+            <h2 id="intro-title">Background</h2>
+            <p>In July&nbsp;2024, CrowdStrike released an incorrect Falcon content update targeting <strong>&ldquo;malicious named pipes&rdquo;</strong> rules. The update interacted unexpectedly with Windows, causing kernel crashes and triggering widespread <abbr title="Blue Screen of Death">BSOD</abbr> events across multiple regions. As many as <strong>8.5&nbsp;million</strong> devices were impacted across aviation, healthcare, banking, government, and retail sectors, and the direct economic impact has been estimated at over <strong>$10&nbsp;billion</strong>. Airline check&#8209;in systems halted, hospital patient records were inaccessible, and financial institutions delayed clearing transactions. Such disruption illustrates how a single point of failure in a security platform can cascade into critical infrastructure.</p>
+        </section>
+
+        <section id="bia" class="reveal" aria-labelledby="bia-title">
+            <h2 id="bia-title">Business Impact Analysis (BIA)</h2>
+            <p>The BIA evaluates both direct and indirect consequences of the outage on business operations. Direct costs included revenue loss due to service outages and emergency remediation. Indirect impacts included reputational damage, customer churn, and potential legal liabilities. Quantifying these impacts helps prioritise remediation efforts and allocate resources efficiently.</p>
+            <div class="card-grid">
+                <article class="card">
+                    <h3>Direct financial losses</h3>
+                    <p>Downtime for airlines, hospitals, banks and retailers, translating to delayed flights, cancelled appointments and missed transactions.</p>
+                </article>
+                <article class="card">
+                    <h3>Operational disruption</h3>
+                    <p>IT teams diverted from strategic projects to crisis mitigation; executives required to handle crisis communications and regulatory reporting.</p>
+                </article>
+                <article class="card">
+                    <h3>Intangible costs</h3>
+                    <p>Erosion of customer trust and employee morale; risk of lawsuits and regulatory penalties; potential long&#8209;term brand damage.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="rootcause" class="reveal" aria-labelledby="rootcause-title">
+            <h2 id="rootcause-title">Root Cause &amp; Bow&#8209;Tie Analysis</h2>
+            <p>The incident stemmed from a chain of technical and organisational failures. We performed a bow&#8209;tie analysis to map the progression from causes to consequences and identify control gaps.</p>
+            <div class="split">
+                <div>
+                    <h3>Contributing factors</h3>
+                    <ul>
+                        <li><strong>Insufficient testing:</strong> the content update targeted sensitive Windows kernel components, yet lacked rigorous regression and integration testing across diverse operating system builds.</li>
+                        <li><strong>Automated global deployment:</strong> the update was pushed simultaneously to millions of endpoints without phased rollout or fail&#8209;safes to halt distribution upon detecting anomalies.</li>
+                        <li><strong>Inadequate input validation:</strong> the update code did not adequately validate pipe names, leading to kernel memory corruption.</li>
+                        <li><strong>Poor change governance:</strong> limited peer review and risk assessment allowed a high&#8209;impact update to bypass escalation procedures.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Consequences</h3>
+                    <ul>
+                        <li>Widespread BSODs causing system downtime.</li>
+                        <li>Disrupted critical services (e.g. flight scheduling, medical record access, payment processing).</li>
+                        <li>Significant financial and reputational damage.</li>
+                    </ul>
+                </div>
+            </div>
+            <p>Bow&#8209;tie analysis reinforces that technical defects can propagate to severe business disruption when change management controls are weak. Mitigation barriers must be strengthened across both technology and process dimensions.</p>
+        </section>
+
+        <section id="risk" class="reveal" aria-labelledby="risk-title">
+            <h2 id="risk-title">Risk Assessment &amp; Heatmap</h2>
+            <p>We evaluated key risks based on <strong>impact (1&ndash;5)</strong> and <strong>likelihood (1&ndash;5)</strong> to generate a heatmap. Major risks were grouped into <em>technical</em> and <em>people/process</em> categories.</p>
+
+            <div class="heatmap" role="img" aria-label="Risk heatmap plotting five risks by likelihood and impact. Higher and to the right means greater risk.">
+                <div class="heatmap__axis-y" aria-hidden="true">Impact &rarr;</div>
+                <div class="heatmap__grid" id="heatmapGrid"></div>
+                <div class="heatmap__axis-x" aria-hidden="true">Likelihood &rarr;</div>
+            </div>
+            <ul class="legend" aria-hidden="true">
+                <li><span class="legend__swatch legend__swatch--low"></span>Low</li>
+                <li><span class="legend__swatch legend__swatch--medium"></span>Medium</li>
+                <li><span class="legend__swatch legend__swatch--high"></span>High</li>
+                <li><span class="legend__swatch legend__swatch--critical"></span>Critical</li>
+            </ul>
+
+            <div class="table-wrap">
+                <table>
+                    <caption class="visually-hidden">Risk categories with descriptions, impact, and likelihood scores</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Risk Category</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Impact</th>
+                            <th scope="col">Likelihood</th>
+                            <th scope="col">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="riskTableBody"></tbody>
+                </table>
+            </div>
+            <p>High&#8209;impact and high&#8209;likelihood risks require immediate attention. Risk scoring helps allocate resources towards mitigating the most critical vulnerabilities.</p>
+        </section>
+
+        <section id="cap" class="reveal" aria-labelledby="cap-title">
+            <h2 id="cap-title">Corrective Action Plan (CAP)</h2>
+            <p>We propose a multi&#8209;phased corrective plan to prevent recurrence and build resilience.</p>
+            <ul class="checklist">
+                <li><strong>Layered testing and code review:</strong> enforce peer reviews and mandatory integration tests covering different Windows versions and third&#8209;party applications.</li>
+                <li><strong>Phased rollout &amp; auto&#8209;rollback:</strong> deploy updates to a small subset of endpoints (canaries) and monitor for anomalies before broad release; implement automatic rollback if failure thresholds are met.</li>
+                <li><strong>Enhanced error detection and telemetry:</strong> embed health checks in the update; collect real&#8209;time telemetry to detect unusual reboot patterns or memory errors.</li>
+                <li><strong>Staff training &amp; communication:</strong> update incident response playbooks, provide crisis management training, and communicate clearly with customers and partners during incidents.</li>
+                <li><strong>Continuous improvement &amp; audit:</strong> perform regular audits of update procedures, maintain a post&#8209;incident knowledge base, and integrate lessons learned into change management workflows.</li>
+            </ul>
+        </section>
+
+        <section id="erm" class="reveal" aria-labelledby="erm-title">
+            <h2 id="erm-title">Enterprise Risk Management (ERM) Enhancements</h2>
+            <p>To institutionalise resilience, we recommend strengthening corporate risk governance:</p>
+            <ul class="checklist">
+                <li><strong>Governance structure:</strong> assign clear roles and responsibilities for the Board, Risk Committee, <abbr title="Chief Information Security Officer">CISO</abbr>, and product teams. Establish a Resilience Council to oversee BIA, crisis planning and business continuity.</li>
+                <li><strong>Framework alignment:</strong> adopt standards such as ISO&nbsp;22301 (Business Continuity Management), ISO&nbsp;27001 (Information Security) and <abbr title="National Institute of Standards and Technology">NIST</abbr> SP&nbsp;800&#8209;34 for disaster recovery.</li>
+                <li><strong>Risk register &amp; appetite:</strong> maintain a centralised register of technology and operational risks, with clearly defined risk appetite and tolerance thresholds for critical updates.</li>
+                <li><strong>Key Risk Indicators (KRIs):</strong> track metrics such as update failure rate, untested modules, incident detection time, coverage of regression tests, and number of actionable anomalies detected during canary phases.</li>
+                <li><strong>Cross&#8209;functional drills:</strong> run regular tabletop exercises simulating large&#8209;scale outages; involve engineering, operations, support and executive teams to improve coordination.</li>
+            </ul>
+        </section>
+
+        <section id="analysis" class="reveal" aria-labelledby="analysis-title">
+            <h2 id="analysis-title">Analysis &amp; Lessons Learned</h2>
+            <p>The outage illustrates how highly automated security platforms can turn into systemic risks when safeguards are lacking. Technical issues in the update pipeline (e.g. input validation) are intimately connected to organisational factors such as workload pressures, inadequate change management and fragmented oversight.</p>
+            <p>By mapping causal pathways, we see that a single defect escalated rapidly because there were no intermediate barriers (e.g. canary testing, peer review, kill switch). The event underscores that <em>resilience is not solely a technical feature</em> but a holistic discipline requiring process maturity, leadership commitment and a culture of transparency.</p>
+            <p>CrowdStrike&rsquo;s swift remediation and subsequent transparency demonstrate an opportunity to emerge stronger. Implementing the corrective actions and ERM enhancements will not only prevent similar disruptions but also strengthen customer confidence. Aligning resilience practices with recognised standards such as ISO&nbsp;22301 fosters external assurance and continuous improvement.</p>
+        </section>
+
+        <section id="why" class="reveal" aria-labelledby="why-title">
+            <h2 id="why-title">Why CrowdStrike &amp; Why Me</h2>
+            <p><strong>Why CrowdStrike:</strong> As a pioneer in cloud&#8209;native cybersecurity, CrowdStrike&rsquo;s mission to stop breaches resonates with my passion for protecting critical systems. The July 2024 incident provides a real&#8209;world opportunity to drive meaningful improvements in resilience and governance. I admire CrowdStrike&rsquo;s culture of learning and transparency, and I am excited by the chance to contribute to its ongoing transformation.</p>
+            <p><strong>Why I&rsquo;m a fit:</strong> I bring hands&#8209;on experience in business continuity and risk management, including performing BIAs, developing crisis plans, and facilitating tabletop exercises. My background in IT audit and data analytics enables me to identify control gaps and design evidence&#8209;based remediation. I am adept at communicating complex technical issues to diverse audiences and at building collaborative relationships across engineering, operations and leadership teams. This aligns perfectly with the Business Resilience Analyst role&rsquo;s requirements to support BCP development, risk assessments, and cross&#8209;functional training.</p>
+            <p>Joining CrowdStrike would allow me to leverage my skills in a mission&#8209;driven environment while continuing to grow professionally through the company&rsquo;s remote&#8209;friendly culture and professional development programs.</p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Prepared by <span class="footer__author">[Your Name]</span> &ndash; 2025. This project is an independent analysis inspired by the CrowdStrike July&nbsp;2024 outage and is not officially affiliated with CrowdStrike.</p>
     </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top" hidden>&uarr;</button>
+
+    <script src="script.js" defer></script>
 </body>
 </html>
